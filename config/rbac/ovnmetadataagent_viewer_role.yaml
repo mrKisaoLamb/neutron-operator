@@ -1,0 +1,20 @@
+# permissions for end users to view ovnmetadataagents.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ovnmetadataagent-viewer-role
+rules:
+- apiGroups:
+  - neutron.openstack.org
+  resources:
+  - ovnmetadataagents
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - neutron.openstack.org
+  resources:
+  - ovnmetadataagents/status
+  verbs:
+  - get

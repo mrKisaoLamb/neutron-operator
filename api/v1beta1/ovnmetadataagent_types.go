@@ -20,26 +20,28 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// OVSNodeOspSpec defines the desired state of OVSNodeOsp
-type OVSNodeOspSpec struct {
+// OVNMetadataAgentSpec defines the desired state of OVNMetadataAgent
+type OVNMetadataAgentSpec struct {
+	// name of configmap which holds general information on the OSP env
+	CommonConfigMap string `json:"commonConfigMap"`
 	// container image to run for the daemon
-	OvsNodeOspImage string `json:"ovsNodeOspImage"`
+	OVNMetadataAgentImage string `json:"ovsNodeOspImage"`
 	// service account used to create pods
 	ServiceAccount string `json:"serviceAccount"`
 	// Name of the worker role created for OSP computes
 	RoleName string `json:"roleName"`
 	// log level
-	OvsLogLevel string `json:"ovsLogLevel"`
-	// NIC for ovn encap ip
-	Nic string `json:"nic"`
-	// Make the nodes a Network Gateways Node
-	Gateway bool `json:"gateway,omitempty"`
-	// Bridge Mappings
-	BridgeMappings string `json:"bridgeMappings,omitempty"`
+	OvnLogLevel string `json:"ovsLogLevel"`
+	// Secret containing: cell transport_url
+	TransportURLSecret string `json:"transportURLSecret,omitempty"`
+	//
+	NovaMetadataInternal string `json:"NovaMetadataInternal,omitempty"`
+	// Secret containing: metadata proxy
+	NeutronMetadataProxySharedSecret string `json:"NovaMetadataInternal,omitempty"`
 }
 
-// OVSNodeOspStatus defines the observed state of OVSNodeOsp
-type OVSNodeOspStatus struct {
+// OVNMetadataAgentStatus defines the observed state of OVNMetadataAgent
+type OVNMetadataAgentStatus struct {
 	// Count is the number of nodes the daemon is deployed to
 	Count int32 `json:"count"`
 	// Daemonset hash used to detect changes
@@ -49,24 +51,25 @@ type OVSNodeOspStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// OVSNodeOsp is the Schema for the ovsnodeosps API
-type OVSNodeOsp struct {
+// OVNMetadataAgent is the Schema for the ovnmetadataagents API
+// +kubebuilder:resource:path=ovnmetadataagent,scope=Namespaced
+type OVNMetadataAgent struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   OVSNodeOspSpec   `json:"spec,omitempty"`
-	Status OVSNodeOspStatus `json:"status,omitempty"`
+	Spec   OVNMetadataAgentSpec   `json:"spec,omitempty"`
+	Status OVNMetadataAgentStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// OVSNodeOspList contains a list of OVSNodeOsp
-type OVSNodeOspList struct {
+// OVNMetadataAgentList contains a list of OVNMetadataAgent
+type OVNMetadataAgentList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []OVSNodeOsp `json:"items"`
+	Items           []OVNMetadataAgent `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&OVSNodeOsp{}, &OVSNodeOspList{})
+	SchemeBuilder.Register(&OVNMetadataAgent{}, &OVNMetadataAgentList{})
 }

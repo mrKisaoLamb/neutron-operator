@@ -1,0 +1,7 @@
+apiVersion: neutron.openstack.org/v1beta1
+kind: OVNMetadataAgent
+metadata:
+  name: ovnmetadataagent-sample
+spec:
+  # Add fields here
+  foo: bar
